@@ -35,6 +35,8 @@ def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_pat
     kptsA = kptsA[mask][selected_indices]
     kptsB = kptsB[mask][selected_indices]
 
+    # comment above code if you want full visualization.
+
     im1 = cv2.cvtColor(cv2.imread(im1_path), cv2.COLOR_BGR2RGB)
     im2 = cv2.cvtColor(cv2.imread(im2_path), cv2.COLOR_BGR2RGB)
 
