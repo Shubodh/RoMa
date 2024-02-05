@@ -24,8 +24,16 @@ def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_pat
     - mask: Mask indicating inliers (value=1) and outliers (value=0), can be a tensor on CUDA or CPU, or a numpy array.
     - save_path: Path where the plot will be saved.
     """
-    # Load images
-    # resize images using cv2
+    num_matches_to_visualize = 100  # Adjust this number as needed
+    indices = np.arange(len(kptsA[mask]))
+    if len(indices) > num_matches_to_visualize:
+        selected_indices = np.random.choice(indices, size=num_matches_to_visualize, replace=False)
+    else:
+        selected_indices = indices
+
+    # Use selected_indices to filter keypoints for visualization
+    kptsA = kptsA[mask][selected_indices]
+    kptsB = kptsB[mask][selected_indices]
 
     im1 = cv2.cvtColor(cv2.imread(im1_path), cv2.COLOR_BGR2RGB)
     im2 = cv2.cvtColor(cv2.imread(im2_path), cv2.COLOR_BGR2RGB)
