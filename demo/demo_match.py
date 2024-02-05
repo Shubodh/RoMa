@@ -12,7 +12,7 @@ from roma import roma_outdoor
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def plot_and_save_matches(im1_path, im2_path, kptsA, kptsB, mask, save_path):
+def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_path):
     """
     Plot and save the matches between two images highlighting inliers.
 
@@ -25,8 +25,13 @@ def plot_and_save_matches(im1_path, im2_path, kptsA, kptsB, mask, save_path):
     - save_path: Path where the plot will be saved.
     """
     # Load images
+    # resize images using cv2
+
     im1 = cv2.cvtColor(cv2.imread(im1_path), cv2.COLOR_BGR2RGB)
     im2 = cv2.cvtColor(cv2.imread(im2_path), cv2.COLOR_BGR2RGB)
+
+    im1 = cv2.resize(im1, (W, H))
+    im2 = cv2.resize(im2, (W, H))
 
     # Move keypoints tensors to CPU and convert to numpy if they are PyTorch tensors
     if isinstance(kptsA, torch.Tensor):
@@ -125,7 +130,7 @@ if __name__ == "__main__":
 
     num_inliers, inlier_ratio, avg_score = metrics_calculate(mask, certainty)
     print("num_inliers, inlier_ratio, avg_score :", num_inliers, inlier_ratio, avg_score)
-    plot_and_save_matches(im1_path, im2_path, kptsA, kptsB, mask, save_path)
+    plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_path)
     # Custom code end
     # Sampling not needed, but can be done with model.sample(warp, certainty)
     # x1 = (torch.tensor(np.array(im1)) / 255).to(device).permute(2, 0, 1)
