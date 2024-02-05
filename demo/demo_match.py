@@ -12,7 +12,7 @@ from roma import roma_outdoor
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_path):
+def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_path, plot_dense=False):
     """
     Plot and save the matches between two images highlighting inliers.
 
@@ -45,18 +45,6 @@ def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_pat
     else:
         mask = mask.flatten()
     
-    #JFDO: comment below code if you want full visualization.
-    num_matches_to_visualize = 100  # Adjust this number as needed
-    indices = np.arange(len(kptsA[mask]))
-    if len(indices) > num_matches_to_visualize:
-        selected_indices = np.random.choice(indices, size=num_matches_to_visualize, replace=False)
-    else:
-        selected_indices = indices
-
-    # Use selected_indices to filter keypoints for visualization
-    kptsA = kptsA[mask][selected_indices]
-    kptsB = kptsB[mask][selected_indices]
-    #JFDO: comment above code if you want full visualization.
 
     # Create a plot
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
@@ -65,9 +53,15 @@ def plot_and_save_matches(im1_path, im2_path, W, H, kptsA, kptsB, mask, save_pat
     # Draw matches
     plt.imshow(np.concatenate((im1, im2), axis=1))
 
+    # only plot 100 matches
+    match_i = 0
     for (x1, y1), (x2, y2) in zip(kptsA[mask], kptsB[mask]):
         plt.plot([x1, x2 + im1.shape[1]], [y1, y2], color='y', linestyle='-', linewidth=1)
         plt.scatter([x1, x2 + im1.shape[1]], [y1, y2], color='y', s=3)
+
+        match_i += 1
+        if match_i > 100 and not plot_dense:
+            break
 
     plt.savefig(save_path, bbox_inches='tight', pad_inches=0.1)
     plt.close()
