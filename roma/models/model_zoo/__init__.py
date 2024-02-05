@@ -1,4 +1,6 @@
 from typing import Union
+from typing import Tuple
+
 import torch
 from .roma_models import roma_model
 
@@ -10,7 +12,7 @@ weight_urls = {
     "dinov2": "https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_pretrain.pth", #hopefully this doesnt change :D
 }
 
-def roma_outdoor(device, weights=None, dinov2_weights=None, coarse_res: Union[int,tuple[int,int]] = 560, upsample_res: Union[int,tuple[int,int]] = 864):
+def roma_outdoor(device, weights=None, dinov2_weights=None, coarse_res: Union[int,Tuple[int,int]] = 560, upsample_res: Union[int,Tuple[int,int]] = 864):
     if isinstance(coarse_res, int):
         coarse_res = (coarse_res, coarse_res)
     if isinstance(upsample_res, int):    
@@ -31,7 +33,7 @@ def roma_outdoor(device, weights=None, dinov2_weights=None, coarse_res: Union[in
     print(f"Using coarse resolution {coarse_res}, and upsample res {model.upsample_res}")
     return model
 
-def roma_indoor(device, weights=None, dinov2_weights=None, coarse_res: Union[int,tuple[int,int]] = 560, upsample_res: Union[int,tuple[int,int]] = 864):
+def roma_indoor(device, weights=None, dinov2_weights=None, coarse_res: Union[int,Tuple[int,int]] = 560, upsample_res: Union[int,Tuple[int,int]] = 864):
     if isinstance(coarse_res, int):
         coarse_res = (coarse_res, coarse_res)
     if isinstance(upsample_res, int):    
